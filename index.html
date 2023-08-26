@@ -1,12 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <title>nv-crack</title>
+    <title>v8-version-analyzer</title>
 
     <link rel="stylesheet" href="https://unpkg.com/@codolog/form@1.0.0/dist/form.min.css" />
     <link rel="stylesheet" href="assets/style.css">
+
+    <script type="module" src="assets/index.js"></script>
 </head>
+
 <body>
     <div class="wrapper">
         <form>
@@ -18,8 +22,8 @@
                 <div>
                     <button type="button" class="form full" id="submit">Submit</button>
                 </div>
-                <br/>
-                <br/>
+                <br />
+                <br />
                 <div>
                     <label class="form">Output</label>
                     <textarea id="output" class="form" readonly placeholder="Output"></textarea>
@@ -27,66 +31,6 @@
             </div>
         </form>
     </div>
-
-    <script type="module">
-        const file_input = document.getElementById("file_input");
-        const submit = document.getElementById("submit");
-
-        const output = document.getElementById("output");
-
-        window.config = {
-            versionMask: [10, 10, 700, 200]
-        };
-
-        const fetchTask = fetch("assets/version_map.json")
-            .then(res => res.json())
-            .then(data => window.versionMap = data)
-            .catch(() => {
-                window.versionMap = {};
-                console.error("Failed to fetch version map");
-            });
-
-        import { default as loadwasm } from "./pkg/nv_crack.js";
-        import { checkSignature, analyzeHash } from "./assets/hash_analyzer.js";
-
-        Promise.all([loadwasm(), fetchTask]).then(() => {
-            submit.onclick = async () => {
-                output.value = "";
-
-                const file = file_input.files[0];
-                if (!file) return;
-
-                let reader = new FileReader();
-                const readTask = new Promise(resolve => {
-                    reader.addEventListener('load', resolve);
-                });
-                reader.readAsArrayBuffer(file);
-
-                const event = await readTask;
-                const data = event.target.result;
-
-                if (data.length <= 0x4) return void (output.value += "File is too small (incomplete header)\n");
-
-                let view;
-                try {
-                    view = new Uint32Array(data, 0, 64);
-                } catch(e) {
-                    console.error(e);
-                    output.value += "Invalid file";
-                    return;
-                }
-
-                let valid = checkSignature(view[0]);
-
-                output.value += `File signature is ${valid ? 'valid' : 'invalid'}!\n\n`;
-
-                analyzeHash(output, view[1]);
-
-                console.log(view);
-
-                output.value += `Source length: ${view[2]}`;
-            };
-        });
-    </script>
 </body>
+
 </html>

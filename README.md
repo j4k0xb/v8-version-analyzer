@@ -1,17 +1,12 @@
-# NV-Crack
+# v8-version-analyzer
 
-> A quick way to get the v8 / Node.js version of a v8-bytecode file
+A quick way to get the v8/Node.js/Electron version of a v8-bytecode file, typically produced by [bytenode](https://github.com/bytenode/bytenode).
 
-[Running demo site](https://xcf-t.github.io/nv-crack/)
+## Changes of this fork
 
-## 🛠️ Building
+- Pure JS implementation, no rust/wasm
+- Always up-to-date by fetching Node.js/Electron and the corresponding v8 versions
 
-```
-wasm-pack build --target web
-```
+## Credits
 
-## 📖 Credits
-
-* [`v8`](https://github.com/v8/v8/) for providing the initial C++ implementation of the hash function.
-* [`Rph`](https://github.com/rphsoftware) for assisting with template expansion
-
+- <https://github.com/xcf-t/nv-crack> - The original project
