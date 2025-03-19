@@ -19,7 +19,7 @@ submit.addEventListener('click', async () => {
 
   let view;
   try {
-    view = new Uint32Array(data, 0, 64);
+    view = new Uint32Array(data, 0, 2);
   } catch (e) {
     console.error(e);
     output.value = 'Invalid file';
