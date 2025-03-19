@@ -5,12 +5,23 @@ export function checkSignature(magicNumber) {
 }
 
 export function findVersions(hash) {
-  const candidates = versions.filter((release) => release.hash === hash);
-  return {
-    v8: [...new Set(candidates.map((v) => v.v8))],
-    node: candidates.filter((v) => v.type === "node"),
-    electron: candidates.filter((v) => v.type === "electron"),
-  };
+  const result = { node: [], electron: [] };
+
+  for (const candidate of versions.filter((release) => release.hash === hash)) {
+    result[candidate.type].push(candidate);
+
+    if (candidate.type === "electron") {
+      const nodeCandidate = versions.find(
+        (release) =>
+          release.type === "node" && release.version === "v" + candidate.node
+      );
+      if (nodeCandidate) {
+        candidate.v8Node = nodeCandidate.v8;
+      }
+    }
+  }
+
+  return result;
 }
 
 const versions = await hashVersions();

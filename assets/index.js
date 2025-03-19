@@ -31,15 +31,17 @@ submit.addEventListener('click', async () => {
   const hashStr = view[1].toString(16).padStart(8, '0');
 
   output.value += `File signature is ${valid ? 'valid' : 'invalid'}!\n\n`;
-  output.value += `V8 Version: ${versions.v8} (hash: ${hashStr})\n\n`;
+  output.value += `Hash: ${hashStr}\n\n`;
 
   if (versions.node.length) {
     output.value += `Possible Node Versions:\n${versions.node
-      .map(v => `- ${v.version}`)
+      .map(v => `- ${v.version} (v8 ${v.v8})`)
       .join('\n')}\n`;
   } else if (versions.electron.length) {
     output.value += `Possible Electron Versions:\n${versions.electron
-      .map(v => `- ${v.version} (Node ${v.node})`)
+      .map(v => `- ${v.version}
+  - Chromium: v8 ${v.v8}
+  - Node ${v.node}: v8 ${v.v8Node}`)
       .join('\n')}\n`;
   } else {
     output.value += `No Node or Electron versions found for this V8 version.\n`;
