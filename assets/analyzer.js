@@ -13,7 +13,7 @@ export function findVersions(hash) {
         node: release.version,
         nodeV8: release.v8,
         electron: null,
-        electronV8: null,
+        chromiumV8: null,
       });
     } else {
       const nodeRelease = versions.find(
@@ -26,7 +26,7 @@ export function findVersions(hash) {
         node: nodeRelease?.version,
         nodeV8: nodeRelease?.v8,
         electron: release.version,
-        electronV8: release.v8,
+        chromiumV8: release.v8,
       });
     }
   }

@@ -47,7 +47,7 @@ fileInput.addEventListener("change", async (event) => {
     nodeCell.textContent = version.node;
     nodeV8Cell.textContent = version.nodeV8;
     electronCell.textContent = version.electron;
-    chromiumV8Cell.textContent = version.electronV8;
+    chromiumV8Cell.textContent = version.chromiumV8;
     row.append(nodeCell, nodeV8Cell, electronCell, chromiumV8Cell);
     outputRows.appendChild(row);
   }
