@@ -5,19 +5,29 @@ export function checkSignature(magicNumber) {
 }
 
 export function findVersions(hash) {
-  const result = { node: [], electron: [] };
+  const result = [];
 
-  for (const candidate of versions.filter((release) => release.hash === hash)) {
-    result[candidate.type].push(candidate);
-
-    if (candidate.type === "electron") {
-      const nodeCandidate = versions.find(
-        (release) =>
-          release.type === "node" && release.version === "v" + candidate.node
+  for (const release of versions.filter((release) => release.hash === hash)) {
+    if (release.type === "node") {
+      result.push({
+        node: release.version,
+        nodeV8: release.v8,
+        electron: null,
+        electronV8: null,
+      });
+    } else {
+      const nodeRelease = versions.find(
+        (nodeRelease) =>
+          nodeRelease.type === "node" &&
+          nodeRelease.version === "v" + release.node
       );
-      if (nodeCandidate) {
-        candidate.v8Node = nodeCandidate.v8;
-      }
+
+      result.push({
+        node: nodeRelease?.version,
+        nodeV8: nodeRelease?.v8,
+        electron: release.version,
+        electronV8: release.v8,
+      });
     }
   }
 

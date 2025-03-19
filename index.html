@@ -3,33 +3,50 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>v8-version-analyzer</title>
 
-    <link rel="stylesheet" href="https://unpkg.com/@codolog/form@1.0.0/dist/form.min.css" />
-    <link rel="stylesheet" href="assets/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 
     <script type="module" src="assets/index.js"></script>
 </head>
 
 <body>
-    <div class="wrapper">
+    <div class="container mx-auto max-w-2xl p-8">
         <form>
-            <div>
-                <div>
-                    <label class="form">Bytecode Input</label>
-                    <input type="file" class="form" id="file_input">
-                </div>
-                <div>
-                    <button type="button" class="form full" id="submit">Submit</button>
-                </div>
-                <br />
-                <br />
-                <div>
-                    <label class="form">Output</label>
-                    <textarea id="output" class="form" readonly placeholder="Output"></textarea>
-                </div>
-            </div>
+            <fieldset class="fieldset">
+                <legend class="legend">Bytecode Input</legend>
+                <input type="file" class="file-input" id="file-input" accept=".jsc" />
+            </fieldset>
         </form>
+
+        <div class="divider"></div>
+
+        <div class="mb-4">
+            <label class="font-semibold text-gray-700">Status:</label>
+            <div id="status" class="font-medium"></div>
+        </div>
+
+        <div class="mb-4">
+            <label class="font-semibold text-gray-700">V8 Hash:</label>
+            <div id="hash" class="font-medium text-blue-600"></div>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Node</th>
+                        <th>Node V8</th>
+                        <th>Electron</th>
+                        <th>Chromium V8</th>
+                    </tr>
+                </thead>
+                <tbody id="output-rows">
+                </tbody>
+            </table>
+        </div>
     </div>
 </body>
 
