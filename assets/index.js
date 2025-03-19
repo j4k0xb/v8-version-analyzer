@@ -30,7 +30,7 @@ fileInput.addEventListener("change", async (event) => {
   }
 
   const versions = findVersions(hash);
-  hashDiv.textContent = hash.toString(16).padStart(8, "0");
+  hashDiv.textContent = "0x" + hash.toString(16).padStart(8, "0");
 
   status.textContent =
     versions.length > 0
