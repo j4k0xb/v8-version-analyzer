@@ -21,15 +21,16 @@ fileInput.addEventListener("change", async (event) => {
     return;
   }
 
-  const view = new Uint32Array(data, 0, 2);
+  const [magic, hash] = new Uint32Array(data, 0, 2);
+  const valid = checkSignature(magic);
 
-  const valid = checkSignature(view[0]);
   if (!valid) {
     status.textContent = "Invalid file signature";
     return;
   }
-  const versions = findVersions(view[1]);
-  hashDiv.textContent = view[1].toString(16).padStart(8, "0");
+
+  const versions = findVersions(hash);
+  hashDiv.textContent = hash.toString(16).padStart(8, "0");
 
   status.textContent =
     versions.length > 0
