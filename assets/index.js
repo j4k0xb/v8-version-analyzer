@@ -39,16 +39,14 @@ fileInput.addEventListener("change", async (event) => {
 
   for (const version of versions) {
     const row = document.createElement("tr");
+    const v8Cell = document.createElement("td");
     const nodeCell = document.createElement("td");
-    const nodeV8Cell = document.createElement("td");
     const electronCell = document.createElement("td");
-    const chromiumV8Cell = document.createElement("td");
 
+    v8Cell.textContent = version.v8;
     nodeCell.textContent = version.node;
-    nodeV8Cell.textContent = version.nodeV8;
     electronCell.textContent = version.electron;
-    chromiumV8Cell.textContent = version.chromiumV8;
-    row.append(nodeCell, nodeV8Cell, electronCell, chromiumV8Cell);
+    row.append(v8Cell, nodeCell, electronCell);
     outputRows.appendChild(row);
   }
 });

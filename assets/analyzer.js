@@ -10,23 +10,20 @@ export function findVersions(hash) {
   for (const release of versions.filter((release) => release.hash === hash)) {
     if (release.type === "node") {
       result.push({
+        v8: release.v8,
         node: release.version,
-        nodeV8: release.v8,
         electron: null,
-        chromiumV8: null,
       });
     } else {
       const nodeRelease = versions.find(
         (nodeRelease) =>
-          nodeRelease.type === "node" &&
-          nodeRelease.version === "v" + release.node
+          nodeRelease.type === "node" && nodeRelease.version === release.node
       );
 
       result.push({
+        v8: release.v8,
         node: nodeRelease?.version,
-        nodeV8: nodeRelease?.v8,
         electron: release.version,
-        chromiumV8: release.v8,
       });
     }
   }
@@ -49,8 +46,18 @@ async function hashVersions() {
     const versionParts = v8.split(".").map(Number);
     const hash = versionHash64(...versionParts);
     const reverseHash = versionHash64(...versionParts.reverse());
-    versions.push({ type: "node", version, v8, hash });
-    versions.push({ type: "node", version, v8, hash: reverseHash });
+    versions.push({
+      type: "node",
+      version: version.replace(/^v/, ""),
+      v8,
+      hash,
+    });
+    versions.push({
+      type: "node",
+      version: version.replace(/^v/, ""),
+      v8,
+      hash: reverseHash,
+    });
   });
 
   electronVersions.forEach(({ version, v8, node }) => {
