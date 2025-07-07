@@ -36,7 +36,7 @@ const versions = await hashVersions();
 async function hashVersions() {
   const [nodeVersions, electronVersions] = await Promise.all([
     fetch("https://nodejs.org/dist/index.json").then((res) => res.json()),
-    fetch("https://releases.electronjs.org/releases.json").then((res) =>
+    fetch("https://corsproxy.io/?url=https://releases.electronjs.org/releases.json").then((res) =>
       res.json()
     ),
   ]);
