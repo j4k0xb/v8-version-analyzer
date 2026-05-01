@@ -1,23 +1,24 @@
 import { checkSignature, findVersions } from "./analyzer.js";
 
 const fileInput = document.getElementById("file-input");
-const status = document.getElementById("status");
-const hashDiv = document.getElementById("hash");
-const outputRows = document.getElementById("output-rows");
+const fileError = document.querySelector("#file-error");
+const hashInput = document.getElementById("hash");
+const v8VersionDiv = document.getElementById("v8-version");
+const nodeVersionsList = document.getElementById("node-versions");
+const electronVersionsList = document.getElementById("electron-versions");
 
 fileInput.addEventListener("change", async (event) => {
-  outputRows.innerHTML = "";
-  hashDiv.textContent = "";
+  fileError.textContent = "";
+  fileInput.classList.remove("file-input-error");
 
   const [file] = event.target.files;
   if (!file) return;
 
-  status.textContent = "Processing...";
-
   const data = await file.arrayBuffer();
 
   if (data.byteLength <= 8) {
-    status.textContent = "File is too small (incomplete header)";
+    fileInput.classList.add("file-input-error");
+    fileError.textContent = "Invalid file signature";
     return;
   }
 
@@ -25,28 +26,45 @@ fileInput.addEventListener("change", async (event) => {
   const valid = checkSignature(magic);
 
   if (!valid) {
-    status.textContent = "Invalid file signature";
+    fileInput.classList.add("file-input-error");
+    fileError.textContent = "Invalid file signature";
     return;
   }
 
-  const versions = findVersions(hash);
-  hashDiv.textContent = "0x" + hash.toString(16).padStart(8, "0");
+  hashInput.value = hash.toString(16).padStart(8, "0");
 
-  status.textContent =
-    versions.length > 0
-      ? "Success"
-      : "No Node or Electron versions found for this V8 version.";
-
-  for (const version of versions) {
-    const row = document.createElement("tr");
-    const v8Cell = document.createElement("td");
-    const nodeCell = document.createElement("td");
-    const electronCell = document.createElement("td");
-
-    v8Cell.textContent = version.v8;
-    nodeCell.textContent = version.node;
-    electronCell.textContent = version.electron;
-    row.append(v8Cell, nodeCell, electronCell);
-    outputRows.appendChild(row);
-  }
+  displayVersions(hash);
 });
+
+hashInput.addEventListener("input", () => {
+  const hash = parseInt(hashInput.value, 16);
+  displayVersions(hash);
+});
+
+/**
+ * @param {number} hash
+ */
+function displayVersions(hash) {
+  const result = findVersions(hash);
+  if (result.length > 0) {
+    v8VersionDiv.textContent = result[0].v8;
+    nodeVersionsList.innerHTML = "";
+    electronVersionsList.innerHTML = "";
+
+    for (const item of result) {
+      const listItem = document.createElement("li");
+      listItem.textContent = item.version;
+      listItem.className =
+        "px-3 py-2 rounded-lg bg-gray-50 hover:bg-gray-100 transition";
+      if (item.type === "node") {
+        nodeVersionsList.appendChild(listItem);
+      } else if (item.type === "electron") {
+        electronVersionsList.appendChild(listItem);
+      }
+    }
+  } else {
+    v8VersionDiv.textContent = "—";
+    nodeVersionsList.innerHTML = `<li class="opacity-50">No versions found</li>`;
+    electronVersionsList.innerHTML = `<li class="opacity-50">No versions found</li>`;
+  }
+}

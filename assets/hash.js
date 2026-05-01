@@ -1,3 +1,7 @@
+/**
+ * @param {bigint} v
+ * @returns {bigint}
+ */
 function hashValueUnsigned(v) {
   v = ((v << 15n) - v - 1n) & 0xffffffffn;
   v = (v ^ (v >> 12n)) & 0xffffffffn;
@@ -8,6 +12,11 @@ function hashValueUnsigned(v) {
   return v;
 }
 
+/**
+ * @param {bigint} seed
+ * @param {bigint} value
+ * @returns {bigint}
+ */
 function hashCombine64(seed, value) {
   const m = 0xc6a4a7935bd1e995n;
   const r = 47n;
@@ -21,6 +30,13 @@ function hashCombine64(seed, value) {
   return seed;
 }
 
+/**
+ * @param {number} major
+ * @param {number} minor
+ * @param {number} build
+ * @param {number} patch
+ * @returns {number}
+ */
 export function versionHash64(major, minor, build, patch = 0) {
   let seed = 0n;
   seed = hashCombine64(seed, hashValueUnsigned(BigInt(patch)));

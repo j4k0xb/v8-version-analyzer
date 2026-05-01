@@ -2,51 +2,104 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>v8-version-analyzer</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 
     <script type="module" src="assets/index.js"></script>
 </head>
 
-<body>
-    <div class="container mx-auto max-w-2xl p-8">
-        <form>
-            <fieldset class="fieldset">
-                <legend class="legend">Bytecode Input</legend>
-                <input type="file" class="file-input" id="file-input" accept=".jsc" />
-            </fieldset>
-        </form>
+<body class="bg-base-200 min-h-screen">
 
-        <div class="divider"></div>
+    <div class="max-w-4xl mx-auto p-6">
 
-        <div class="mb-4">
-            <label class="font-semibold text-gray-700">Status:</label>
-            <div id="status" class="font-medium"></div>
+        <!-- Header -->
+        <div class="mb-8 text-center">
+            <h1 class="text-3xl font-bold">V8 Version Analyzer</h1>
+            <p class="text-sm opacity-70 mt-2">
+                Identify V8 versions and compatible runtimes for .jsc bytecode files, typically produced by <a
+                    href="https://github.com/bytenode/bytenode" class="text-primary underline">bytenode</a>.
+            </p>
         </div>
 
-        <div class="mb-4">
-            <label class="font-semibold text-gray-700">V8 Hash:</label>
-            <div id="hash" class="font-medium text-blue-600"></div>
+        <!-- Main Card -->
+        <div class="card bg-base-100 shadow-md border border-base-300">
+            <div class="card-body space-y-6">
+
+                <!-- Input Section -->
+                <div class="grid md:grid-cols-2 gap-4">
+
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text font-medium">Bytecode Input</span>
+                        </label>
+                        <input type="file" class="file-input file-input-bordered" accept=".jsc" id="file-input" />
+                        <label class="label">
+                            <span class="label-text-alt text-error" id="file-error">
+                            </span>
+                        </label>
+                    </div>
+
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text font-medium">V8 Hash</span>
+                        </label>
+                        <input type="text" class="input input-bordered w-full" id="hash" maxlength="8"
+                            placeholder="Optional (e.g. a1b2c3d4)" />
+                    </div>
+
+                </div>
+
+                <!-- Status -->
+                <div id="status" class="alert hidden"></div>
+
+                <!-- Result Section -->
+                <div class="divider">Result</div>
+
+                <div class="flex items-center justify-between flex-wrap gap-2">
+                    <div>
+                        <div class="text-sm opacity-60">Detected V8 Version</div>
+                        <div id="v8-version" class="text-xl font-semibold text-primary">
+                            —
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Versions -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                    <!-- Node.js -->
+                    <div class="card bg-base-200 border border-base-300">
+                        <div class="card-body p-4">
+                            <h2 class="card-title text-base">Node.js</h2>
+
+                            <ul id="node-versions" class="space-y-2 text-sm">
+                                <li class="opacity-50">No data yet</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Electron -->
+                    <div class="card bg-base-200 border border-base-300">
+                        <div class="card-body p-4">
+                            <h2 class="card-title text-base">Electron</h2>
+
+                            <ul id="electron-versions" class="space-y-2 text-sm">
+                                <li class="opacity-50">No data yet</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
         </div>
 
-        <div class="overflow-x-auto">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>V8</th>
-                        <th>Node</th>
-                        <th>Electron</th>
-                    </tr>
-                </thead>
-                <tbody id="output-rows">
-                </tbody>
-            </table>
-        </div>
     </div>
+
 </body>
 
 </html>
